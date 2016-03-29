@@ -1,5 +1,4 @@
 from PIL import Image
-#
 import sys
 import os
 import time
@@ -28,10 +27,10 @@ def tile():
                 im.close()
 
 def findRed(pil_img):
-	red_thresh = 140
+	red_thresh = 120
 	green_thresh = 80
 	blue_thresh = 80
-	pixel_thresh = 50
+	pixel_thresh = 1 
 	pixel_count = 0
 	window = np.array(pil_img)
 	imgHeight = window.shape[0]

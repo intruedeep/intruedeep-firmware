@@ -1,67 +1,89 @@
 import RPi.GPIO as GPIO
 import smbus
+import sys
 from time import sleep
 
 bus = smbus.SMBus(1)
 address = 0x30
-turnTime = .05;
-
-#Set up motor
-GPIO.setmode(GPIO.BOARD)
+turnTime = .001;
+fireTIme = .5;
 Motor1A = 12
+FireGPIO = 11
+
+GPIO.setmode(GPIO.BOARD)
 GPIO.setup(Motor1A,GPIO.OUT)
-p = GPIO.PWM(Motor1A, 200);
+GPIO.setup(FireGPIO,GPIO.OUT)
+p = GPIO.PWM(Motor1A, 50);
+offset = 0
+
+def Fire():
+	GPIO.output(FireGPIO, True);
+	sleep(.5);
+	GPIO.output(FireGPIO, False);
+
 
 def getBearing1():
-	bear = bus.read_byte_data(address, 64)
-	return bear
+	while(1):
+		try:
+			bear = bus.read_byte_data(address, 64)
+			return bear
+		except:
+			print "hard a bus error"
 
 def getBearing2():
-	bear = bus.read_byte_data(address, 65)
-	return bear
+	while(1):
+		try:
+			bear = bus.read_byte_data(address, 65)
+			return bear
+		except:
+			print "hard a bus error"
 
 def turnMotor(rotdir, seconds):
 	if(rotdir == 'cw'):
-		p.ChangeDutyCycle(40);
-		dutyCycle = 40;
+		dutyCycle = 10;
 	else:
-		p.ChangeDutyCycle(24);
-		dutyCycle = 24;
+		dutyCycle = 6;
 		
 	p.start(dutyCycle);
 
 	sleep(seconds);
 	 
-
 def Postition(msb, lsb):
 	return (msb * 255 + lsb)
 	
+def findDestinationPos(x):
+	return x * 15;
 
-def main():
+def goToDestination(destinationPos):
+	pos = Postition(msb, lsb);
+	while(pos < destinationPos):
+		turnMotor("cw", turnTime);
+		msb = getBearing1();
+		lsb = getBearing2();
+		pos = Postition(msb, lsb);
+
+def returnHome(startingPos):
+	pos = Postition(msb, lsb);
+	while(pos > startingPos + offset):
+		turnMotor("ccw", turnTime);
+		msb = getBearing1();
+		lsb = getBearing2();
+		pos = Postition(msb, lsb);
+
+def main(x):
 	msb = getBearing1();
 	lsb = getBearing2();
 
-	targetPos = 2156
-	startingPos = Postition(msb, lsb);
+        startingPos = Postition(msb, lsb);
+	targetPos = findDestionationPos(x);
 	destinationPos = startingPos + targetPos;
-	pos = startingPos;
 
-	while(pos < destinationPos):
-		msb = getBearing1();
-		lsb = getBearing2();
-		pos = Postition(msb, lsb);
-		turnMotor("cw", turnTime);
-		print msb;
+	goToDestination(destinationPos);
+	returnHome(startingPos);
 
-	print "here";
-
-	while(pos > startingPos):
-		msb = getBearing1();
-		lsb = getBearing2();
-		pos = Postition(msb, lsb);
-		turnMotor("ccw", turnTime);
-		print msb;
-
+	p.stop()
 	GPIO.cleanup()
 
-main();
+if __name__ == "__main__":
+	main(sys.argv[1]);
+
