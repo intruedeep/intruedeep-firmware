@@ -12,7 +12,7 @@ FireGPIO = 11
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(Motor1A,GPIO.OUT)
-GPIO.setup(FireGPIO,GPIO.OUT)
+#GPIO.setup(FireGPIO,GPIO.OUT)
 p = GPIO.PWM(Motor1A, 50);
 offset = 0
 
@@ -28,7 +28,7 @@ def getBearing1():
 			bear = bus.read_byte_data(address, 64)
 			return bear
 		except:
-			print "hard a bus error"
+			print "had a bus error"
 
 def getBearing2():
 	while(1):
@@ -46,7 +46,9 @@ def turnMotor(rotdir, seconds):
 		
 	p.start(dutyCycle);
 
+	print "Trying to turn";
 	sleep(seconds);
+	p.stop()
 	 
 def Postition(msb, lsb):
 	return (msb * 255 + lsb)
@@ -71,6 +73,10 @@ def returnHome(startingPos):
 		pos = Postition(msb, lsb);
 
 def main(x):
+	while(1):
+		turnMotor("cw", turnTime);
+		sleep(5);
+	'''
 	msb = getBearing1();
 	lsb = getBearing2();
 
@@ -83,7 +89,7 @@ def main(x):
 
 	p.stop()
 	GPIO.cleanup()
-
+	'''
 if __name__ == "__main__":
 	main(sys.argv[1]);
 
