@@ -5,13 +5,13 @@ GPIO.setmode(GPIO.BOARD)
 Motor1A = 12 
 GPIO.setup(Motor1A,GPIO.OUT)
 
-while(1):
 
-	p = GPIO.PWM(12, 50)
-	p.start(10);
-	sleep(1);
-	p.stop()
+p = GPIO.PWM(12, 5)
 
-	sleep(2);
- 
+
+p.start(1);
+sleep(.01);
+p.stop()
+
+
 GPIO.cleanup()

@@ -30,7 +30,7 @@ def findRed(pil_img):
 	red_thresh = 120
 	green_thresh = 80
 	blue_thresh = 80
-	pixel_thresh = 1 
+	pixel_thresh = 10
 	pixel_count = 0
 	window = np.array(pil_img)
 	imgHeight = window.shape[0]
@@ -72,22 +72,24 @@ def findCenter():
 	for i in range(1, 39):
 		for j in range(1, 39):
 			#I ensure that each surrounding tile is 1, so that I will reduce the likelyhood of false positives. This may affect if I get the exact center, but that doesn't matter
-			if(imageArray[i + 1][j] == 1 and imageArray[i - 1][j] == 1 and imageArray[i][j + 1] == 1 and imageArray[i][j - 1] == 1):
-				if(i < leftMost):
-					leftMost = i;
-				if(i > rightMost):
-					rightMost = i;
-				if(j < bottomMost):
-					bottomMost = j;
-				if(j > topMost):
-					topMost = j;
+			if(imageArray[i + 1][j] == 1 and imageArray[i - 1][j] == 1 and imageArray[i][j + 1] == 1 and imageArray[i][j - 1] == 1 and imageArray[i][j] == 1):
+				if(j < leftMost):
+					leftMost = j;
+				if(j > rightMost):
+					rightMost = j;
+				if(i < bottomMost):
+					bottomMost = i;
+				if(i > topMost):
+					topMost = i;
 
 	if(leftMost == 2000 or bottomMost == 2000 or topMost == -1 or rightMost == -1):
 		print "couldn't find center"
 		return -1, -1;
 	
-	if(((leftMost + rightMost) / 2) % 2 == 1):
-		leftMost += 1;
+	print "leftmost = " + str(leftMost);
+	print "rightmost = " + str(rightMost);
+	print "topmost = " + str(topMost);
+	print "bottommost = " + str(bottomMost);
 
 	if(((topMost + bottomMost) / 2) % 2 == 1):
 		topMost += 1;

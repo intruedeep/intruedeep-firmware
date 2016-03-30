@@ -1,3 +1,9 @@
+'''
+	One kinda working freq is 50 with dc 10 and 6
+
+
+'''
+
 import RPi.GPIO as GPIO
 import smbus
 import sys
@@ -5,14 +11,15 @@ from time import sleep
 
 bus = smbus.SMBus(1)
 address = 0x30
-turnTime = .00005;
+turnTime = .0001;
 fireTIme = .5;
 Motor1A = 12
 FireGPIO = 11
-offset = 10;
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(Motor1A,GPIO.OUT)
+#GPIO.setup(FireGPIO,GPIO.OUT)
+offset = 0
 
 def Fire():
 	GPIO.output(FireGPIO, True);
@@ -23,7 +30,7 @@ def Fire():
 def getBearing1(): 
 	while(1):
 		try:
-			sleep(.1);
+			sleep(.5);
 			bear = bus.read_byte_data(address, 64)
 			return bear
 		except:
@@ -33,7 +40,7 @@ def getBearing1():
 def getBearing2():
 	while(1):
 		try:
-			sleep(.1);
+			sleep(.5);
 			bear = bus.read_byte_data(address, 65)
 			return bear
 		except:
@@ -41,15 +48,9 @@ def getBearing2():
 
 def turnMotor(rotdir, distance):
 	if(rotdir == 'cw'):
-		if(distance > 200):
-			dutyCycle = .53
-		else:
-			dutyCycle = .49;
+		dutyCycle = .49;
 	else:
-		if(distance > 200):
-			dutyCycle = .39
-		else:
-			dutyCycle = .42;
+		dutyCycle = .42;
 		
 	p = GPIO.PWM(Motor1A, 3.3333);
 	p.start(dutyCycle);
@@ -74,9 +75,8 @@ def goToDestination(destinationPos):
 def returnHome(startingPos):
 	print "Returning Home";
 	pos = Postition();
-	while(pos > startingPos + offset):
-		turnMotor("ccw", pos - startingPos);
-		sleep(.5);
+	while(pos > startingPos):
+		turnMotor("ccw", turnTime);
 		pos = Postition();
 		print "pos = " + str(pos);
 
@@ -85,9 +85,7 @@ def main(x):
 	print "starting = " + str(startingPos);
 
 	targetPos = findDestionationPos(int(x));
-	#destinationPos = startingPos + targetPos
-	destinationPos = startingPos + 496
-
+	destinationPos = startingPos + targetPos;
 
 
 	print "Goal destination = " + str(destinationPos);
