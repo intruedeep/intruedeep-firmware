@@ -1,10 +1,14 @@
 import RPi.GPIO as GPIO
 import smbus
+<<<<<<< HEAD
 import sys
+=======
+>>>>>>> 7e48fb70e68f5c70a9e0f9e711897112b3be6d9b
 from time import sleep
 
 bus = smbus.SMBus(1)
 address = 0x30
+<<<<<<< HEAD
 turnTime = .001;
 fireTIme = .5;
 Motor1A = 12
@@ -37,6 +41,24 @@ def getBearing2():
 			return bear
 		except:
 			print "hard a bus error"
+=======
+turnTime = .01;
+
+#Set up motor
+GPIO.setmode(GPIO.BOARD)
+Motor1A = 12
+GPIO.setup(Motor1A,GPIO.OUT)
+p = GPIO.PWM(Motor1A, 50);
+offset = 188
+
+def getBearing1():
+	bear = bus.read_byte_data(address, 64)
+	return bear
+
+def getBearing2():
+	bear = bus.read_byte_data(address, 65)
+	return bear
+>>>>>>> 7e48fb70e68f5c70a9e0f9e711897112b3be6d9b
 
 def turnMotor(rotdir, seconds):
 	if(rotdir == 'cw'):
@@ -45,6 +67,7 @@ def turnMotor(rotdir, seconds):
 		dutyCycle = 6;
 		
 	p.start(dutyCycle);
+<<<<<<< HEAD
 	sleep(seconds);
 	 
 def Postition():
@@ -105,3 +128,55 @@ def main(x):
 if __name__ == "__main__":
 	main(sys.argv[1]);
 
+=======
+
+	sleep(seconds);
+	 
+
+def Postition(msb, lsb):
+	return (msb * 255 + lsb)
+	
+
+def main():
+	msb = getBearing1();
+	lsb = getBearing2();
+	print lsb;
+	print msb;
+
+	#targetPos = 2156
+	targetPos = 3449
+	
+        startingPos = Postition(msb, lsb);
+	destinationPos = startingPos + targetPos;
+	pos = startingPos;
+	print lsb;
+	print msb;
+	print pos;
+
+	print startingPos;
+	while(pos < destinationPos):
+		msb = getBearing1();
+		lsb = getBearing2();
+		pos = Postition(msb, lsb);
+		turnMotor("cw", turnTime);
+
+	print "here";
+
+#	while(pos > 0 and msb <= 240):
+	while(pos > 180 and pos <= 65000):
+		print pos;
+		msb = getBearing1();
+		lsb = getBearing2();
+		pos = Postition(msb, lsb);
+		turnMotor("ccw", turnTime);
+
+	GPIO.cleanup()
+	msb = getBearing1();
+	lsb = getBearing2();
+	pos = Postition(msb, lsb);
+	print lsb;
+	print msb;
+	print pos;
+
+main();
+>>>>>>> 7e48fb70e68f5c70a9e0f9e711897112b3be6d9b
