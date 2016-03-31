@@ -9,8 +9,8 @@ GPIO.setup(Motor1A,GPIO.OUT)
 p = GPIO.PWM(12, 3.3333)
 
 
-p.start(.51);
-sleep(1);
+p.start(.42);
+sleep(.01);
 p.stop()
 
 
