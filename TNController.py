@@ -30,11 +30,7 @@ def findRed(pil_img):
 	red_thresh = 120
 	green_thresh = 80
 	blue_thresh = 80
-<<<<<<< HEAD
 	pixel_thresh = 10
-=======
-	pixel_thresh = 1 
->>>>>>> 7e48fb70e68f5c70a9e0f9e711897112b3be6d9b
 	pixel_count = 0
 	window = np.array(pil_img)
 	imgHeight = window.shape[0]

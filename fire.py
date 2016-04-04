@@ -3,8 +3,8 @@ import smbus
 from time import sleep
 
 GPIO.setmode(GPIO.BOARD);
-GPIO.setup(11, GPIO.OUT);
-GPIO.output(11, True);
-sleep(5);
-GPIO.output(11, False);
+GPIO.setup(13, GPIO.OUT);
+GPIO.output(13, True);
+sleep(.8);
+GPIO.output(13, False);
 GPIO.cleanup();
