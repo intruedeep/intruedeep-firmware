@@ -93,8 +93,11 @@ def findCenter():
 
 	if(((topMost + bottomMost) / 2) % 2 == 1):
 		topMost += 1;
+	
+	yCor = (topMost + bottomMost) / 2;
+	yCor = 39 - yCor;
 
-	return (leftMost + rightMost) / 2, (topMost + bottomMost) / 2;
+	return (leftMost + rightMost) / 2, yCor;
 
 def printImageArray():
 	for i in range(0, 40):

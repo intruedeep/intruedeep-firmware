@@ -2,14 +2,14 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 GPIO.setmode(GPIO.BOARD)
-Motor1A = 12 
+Motor1A = 37 
 GPIO.setup(Motor1A,GPIO.OUT)
 
 
-p = GPIO.PWM(12, 3.3333)
+p = GPIO.PWM(37, 3.3333)
 
 
-p.start(.51);
+p.start(.53);
 sleep(1);
 p.stop()
 

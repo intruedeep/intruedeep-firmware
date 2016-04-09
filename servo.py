@@ -5,8 +5,8 @@ import time
 
 GPIO.setmode(GPIO.BOARD)
 
-servo = 12;
-frequency = 200;
+servo = 35;
+frequency = 50;
 
 GPIO.setup(servo, GPIO.OUT);
 
@@ -15,8 +15,9 @@ pwm = GPIO.PWM(servo, frequency);
 leftPos = 1;
 rightPos = 2;
 middlePos = (rightPos * 1.0 + leftPos) / 2.0;
+quartile = (middlePos * 1.0 + leftPos) / 2.0;
 
-positionList = [leftPos, rightPos, middlePos]
+positionList = [leftPos, rightPos, middlePos, quartile]
 
 msPerCycle = 1000 / frequency;
 
@@ -27,8 +28,7 @@ for i in range(3):
 		print "DC = " + str(dutyCycle);
 		print;
 		pwm.start(dutyCycle);
-		time.sleep(5);
-		pwm.stop()
+		time.sleep(.5);
 
-
+pwm.stop()
 GPIO.cleanup()

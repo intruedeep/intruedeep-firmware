@@ -4,11 +4,10 @@ import smbus
 
 def fire(slptime=.8):
 	GPIO.setmode(GPIO.BOARD);
-	GPIO.setup(13, GPIO.OUT);
-	GPIO.output(13, True);
+	GPIO.setup(33, GPIO.OUT);
+	GPIO.output(33, True);
 	sleep(slptime);
-	GPIO.output(13, False);
-	GPIO.cleanup();
+	GPIO.output(33, False);
 
 
 def turn_left(slptime=.1):

@@ -1,13 +1,15 @@
 import RPi.GPIO as GPIO
 import smbus
 import sys
+import motor_control
+
 from time import sleep
 
 bus = smbus.SMBus(1)
 address = 0x30
 turnTime = .00005;
 fireTIme = .5;
-Motor1A = 12
+Motor1A = 37
 FireGPIO = 11
 #If the gun is within offset ticks of its desination location, just stop there. 
 offset = 10;
@@ -79,14 +81,29 @@ def findDestinationTicks(index):
 
 def goToDestination(destinationPos):
 	pos = Postition();
-	while(pos + offset < destinationPos):
-		turnMotor("cw", destinationPos - pos);
-		#The motor might still be moving when you call Position, so if you're close to the destination, sleep for a second so that you have an accurate postion returned
-		if(pos - destinationPos < 50):
-			sleep(1);
-		sleep(.1);
-		pos = Postition();
-		print "pos = " + str(pos);
+	while(1):
+		if(destinationPos > pos + offset):
+			turnMotor("cw", destinationPos - pos);
+			#sleep to ensure proper encoder reading
+			if(pos - destinationPos < 50):
+				sleep(1);
+			sleep(.1);
+			pos = Postition();
+			print "pos = " + str(pos);
+
+		elif(destinationPos + offset < pos):
+			turnMotor("cww", pos -  destinationPos);
+			if(destinationPos - pos < 50):
+				sleep(1);
+			sleep(.1);
+			pos = Postition();
+			print "pos = " + str(pos);
+
+		else:
+			break;
+		
+
+
 
 def returnHome(startingPos):
 	print "Returning Home";
@@ -102,10 +119,31 @@ def returnHome(startingPos):
 			break;
 		print "pos = " + str(pos);
 
-def main(x):
+def moveServo(y):
+        servo = 35;
+        frequency = 200;
+
+        GPIO.setup(servo, GPIO.OUT);
+
+        pwm = GPIO.PWM(servo, frequency);
+
+        Pos = 1.23 + ((float(y) + 5) * .0075)
+
+        msPerCycle = 1000 / frequency;
+
+        dutyCycle = Pos * 100 / msPerCycle;
+        pwm.start(dutyCycle);
+        sleep(2);
+        pwm.stop()
+
+
+
+
+def main(x, y):
         startingPos = Postition();
 	print "starting = " + str(startingPos);
 
+		
 	targetPos = findDestinationTicks(int(x));
 	destinationPos = startingPos + targetPos
 	#destinationPos = startingPos + 496
@@ -117,13 +155,17 @@ def main(x):
         currentPos = Postition();
 	print "Reached destination = " + str(currentPos);
 
+	moveServo(y);
 	
+	sleep(3);
+	motor_control.fire()
 	sleep(3);
 
         endingPos = Postition();
 	print "After 3 seconds = " + str(endingPos);
 
-	returnHome(startingPos);
+	#Return home
+	goToDestination(startingPos);
         endingPos = Postition();
 	print "Returned Home = " + str(endingPos);
 	
@@ -134,5 +176,5 @@ def main(x):
 	GPIO.cleanup()
 
 if __name__ == "__main__":
-	main(sys.argv[1]);
+	main(sys.argv[1], sys.argv[2]);
 
