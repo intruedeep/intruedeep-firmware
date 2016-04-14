@@ -1,12 +1,13 @@
 import socket
 from subprocess import call
-
+from middle import moveServo
 
 def takeImage():
 	command = "fswebcam -r 1280x720 --no-banner --jpeg 100 -D 3 -S 13 image.jpg"
 	call(command.split(), shell=False)
 
-def main():	
+def main():
+	moveServo(16)	
         takeImage()
         clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	clientsocket.connect(('192.168.1.3', 8888))

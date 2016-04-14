@@ -13,7 +13,7 @@ def moveServo(y):
 
 	pwm = GPIO.PWM(servo, frequency);
 
-	Pos = 1.23 + ((float(y) + 5) * .0075)
+	Pos = 1.22 + ((float(y)) * .0075)
 
 	msPerCycle = 1000 / frequency;
 
@@ -21,6 +21,7 @@ def moveServo(y):
 	pwm.start(dutyCycle);
 	time.sleep(2);
 	pwm.stop()
+	GPIO.cleanup()
 
 if __name__ == '__main__':
 	moveServo(sys.argv[1]);

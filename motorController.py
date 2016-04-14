@@ -13,9 +13,18 @@ Motor1A = 37
 FireGPIO = 11
 #If the gun is within offset ticks of its desination location, just stop there. 
 offset = 10;
+downPos = 1.22
+middlePos = downPos + .15
+gravityOffset = 0;
+homePos = 16;
 
+servo = 35;
+frequency = 200;
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(Motor1A,GPIO.OUT)
+GPIO.setup(servo, GPIO.OUT);
+pwm = GPIO.PWM(servo, frequency);
+
 
 def Fire():
 	GPIO.output(FireGPIO, True);
@@ -86,16 +95,16 @@ def goToDestination(destinationPos):
 			turnMotor("cw", destinationPos - pos);
 			#sleep to ensure proper encoder reading
 			if(pos - destinationPos < 50):
-				sleep(1);
-			sleep(.1);
+				sleep(.4);
+			#sleep(.1);
 			pos = Postition();
 			print "pos = " + str(pos);
 
 		elif(destinationPos + offset < pos):
 			turnMotor("cww", pos -  destinationPos);
 			if(destinationPos - pos < 50):
-				sleep(1);
-			sleep(.1);
+				sleep(.4);
+			#sleep(.1);
 			pos = Postition();
 			print "pos = " + str(pos);
 
@@ -120,26 +129,25 @@ def returnHome(startingPos):
 		print "pos = " + str(pos);
 
 def moveServo(y):
-        servo = 35;
-        frequency = 200;
 
-        GPIO.setup(servo, GPIO.OUT);
 
-        pwm = GPIO.PWM(servo, frequency);
-
-        Pos = 1.23 + ((float(y) + 5) * .0075)
+        Pos = downPos + ((float(y) + gravityOffset) * .0075)
 
         msPerCycle = 1000 / frequency;
 
         dutyCycle = Pos * 100 / msPerCycle;
         pwm.start(dutyCycle);
         sleep(2);
-        pwm.stop()
+#        pwm.stop()
 
 
 
 
 def main(x, y):
+	GPIO.setmode(GPIO.BOARD)
+	GPIO.setup(Motor1A,GPIO.OUT)
+	GPIO.setup(servo, GPIO.OUT);
+	pwm = GPIO.PWM(servo, frequency);
         startingPos = Postition();
 	print "starting = " + str(startingPos);
 
@@ -173,7 +181,11 @@ def main(x, y):
 
         endingPos = Postition();
 	print "After 3 seconds = " + str(endingPos);
+	#Go to a neutral position;
+	moveServo(homePos);
+	
 	GPIO.cleanup()
+	return 0;
 
 if __name__ == "__main__":
 	main(sys.argv[1], sys.argv[2]);

@@ -12,7 +12,7 @@ GPIO.setup(servo, GPIO.OUT);
 
 pwm = GPIO.PWM(servo, frequency);
 
-Pos = 1.3;
+Pos = 1.22;
 
 msPerCycle = 1000 / frequency;
 
