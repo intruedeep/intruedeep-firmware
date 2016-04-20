@@ -12,13 +12,13 @@ GPIO.setup(servo, GPIO.OUT);
 
 pwm = GPIO.PWM(servo, frequency);
 
-Pos = 1.65;
+Pos = 1.6;
 
 msPerCycle = 1000 / frequency;
 
 dutyCycle = Pos * 100 / msPerCycle;
 pwm.start(dutyCycle);
-time.sleep(2);
+time.sleep(5);
 
 
 pwm.stop()

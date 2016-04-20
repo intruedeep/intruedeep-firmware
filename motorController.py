@@ -12,7 +12,8 @@ fireTIme = .5;
 Motor1A = 37
 FireGPIO = 11
 #If the gun is within offset ticks of its desination location, just stop there. 
-offset = 10;
+offset = 15;
+homeOffset = 10;
 downPos = 1.22
 middlePos = downPos + .15
 gravityOffset = 0;
@@ -53,14 +54,16 @@ def turnMotor(rotdir, distance):
 	if(rotdir == 'cw'):
 		#The lower duty cycle is more precise, but slow. So switch to the lower cycle when you are within a close distance of the taget
 		if(distance > 200):
-			dutyCycle = .53
+			#dutyCycle = .54
+			dutyCycle = .52
 		else:
-			dutyCycle = .5;
+			dutyCycle = .52;
 	else:
 		if(distance > 200):
-			dutyCycle = .39
+			#dutyCycle = .42
+			dutyCycle = .40
 		else:
-			dutyCycle = .42;
+			dutyCycle = .40
 		
 	p = GPIO.PWM(Motor1A, 3.3333);
 	p.start(dutyCycle);
@@ -95,15 +98,15 @@ def goToDestination(destinationPos):
 			turnMotor("cw", destinationPos - pos);
 			#sleep to ensure proper encoder reading
 			if(pos - destinationPos < 50):
-				sleep(.4);
+				sleep(.5);
 			#sleep(.1);
 			pos = Postition();
 			print "pos = " + str(pos);
 
-		elif(destinationPos + offset < pos):
+		elif(destinationPos + homeOffset < pos):
 			turnMotor("cww", pos -  destinationPos);
 			if(destinationPos - pos < 50):
-				sleep(.4);
+				sleep(.5);
 			#sleep(.1);
 			pos = Postition();
 			print "pos = " + str(pos);
