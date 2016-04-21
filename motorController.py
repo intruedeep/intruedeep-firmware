@@ -50,20 +50,20 @@ def getBearing2():
 		except:
 			print "had a bus error on 65"
 
-def turnMotor(rotdir, distance):
+def turnMotor(rotdir, distance, pos, prevPos):
 	if(rotdir == 'cw'):
 		#The lower duty cycle is more precise, but slow. So switch to the lower cycle when you are within a close distance of the taget
-		if(distance > 200):
-			#dutyCycle = .54
-			dutyCycle = .52
+		if(distance > 200 or pos == prevPos):
+			print "Trying high"
+			dutyCycle = .55
 		else:
-			dutyCycle = .52;
+			dutyCycle = .51;
 	else:
-		if(distance > 200):
-			#dutyCycle = .42
-			dutyCycle = .40
+		if(distance > 200 or pos == prevPos):
+			print "Trying high"
+			dutyCycle = .43
 		else:
-			dutyCycle = .40
+			dutyCycle = .39
 		
 	p = GPIO.PWM(Motor1A, 3.3333);
 	p.start(dutyCycle);
@@ -93,28 +93,27 @@ def findDestinationTicks(index):
 
 def goToDestination(destinationPos):
 	pos = Postition();
+	prevPos = 0;
 	while(1):
 		if(destinationPos > pos + offset):
-			turnMotor("cw", destinationPos - pos);
+			turnMotor("cw", destinationPos - pos, pos, prevPos);
 			#sleep to ensure proper encoder reading
 			if(pos - destinationPos < 50):
 				sleep(.5);
-			#sleep(.1);
+			prevPos = pos;
 			pos = Postition();
 			print "pos = " + str(pos);
 
 		elif(destinationPos + homeOffset < pos):
-			turnMotor("cww", pos -  destinationPos);
+			turnMotor("cww", pos -  destinationPos, pos, prevPos);
 			if(destinationPos - pos < 50):
 				sleep(.5);
-			#sleep(.1);
+			prevPos = pos;
 			pos = Postition();
 			print "pos = " + str(pos);
 
 		else:
 			break;
-		
-
 
 
 def returnHome(startingPos):
