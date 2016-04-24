@@ -14,7 +14,7 @@ def takeImage():
 
 def main():
 
-	moveLocation = 20;
+	moveLocation = 18;
 	servo = 35;
         frequency = 200;
 
