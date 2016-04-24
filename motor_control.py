@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 import smbus
 
-def fire(slptime=.8):
+def fire(slptime=1):
 	GPIO.setmode(GPIO.BOARD);
 	GPIO.setup(33, GPIO.OUT);
 	GPIO.output(33, True);

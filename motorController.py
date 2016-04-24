@@ -12,12 +12,13 @@ fireTIme = .5;
 Motor1A = 37
 FireGPIO = 11
 #If the gun is within offset ticks of its desination location, just stop there. 
-offset = 15;
-homeOffset = 10;
+offset = 5;
+homeOffset = 5;
 downPos = 1.22
 middlePos = downPos + .15
 gravityOffset = 0;
 homePos = 16;
+yOffset = 1.5;
 
 servo = 35;
 frequency = 200;
@@ -105,7 +106,7 @@ def goToDestination(destinationPos):
 			pos = Postition();
 			print "pos = " + str(pos);
 
-		elif(destinationPos + homeOffset < pos):
+		elif(destinationPos + offset < pos):
 			turnMotor("cww", pos -  destinationPos, pos, prevPos);
 			if(destinationPos - pos < 50):
 				sleep(.5);
@@ -157,7 +158,6 @@ def main(x, y):
 		
 	targetPos = findDestinationTicks(int(x));
 	destinationPos = startingPos + targetPos
-	#destinationPos = startingPos + 496
 
 
 
@@ -166,24 +166,23 @@ def main(x, y):
         currentPos = Postition();
 	print "Reached destination = " + str(currentPos);
 
-	moveServo(y);
+	moveServo(y + yOffset);
 	
 	sleep(3);
 	motor_control.fire()
 	sleep(3);
 
-        endingPos = Postition();
-	print "After 3 seconds = " + str(endingPos);
+	offset = homeOffset;
 
+        endingPos = Postition();
+
+	print "Actually fired at " + str(endingPos);
 	#Return home
 	goToDestination(startingPos);
         endingPos = Postition();
 	print "Returned Home = " + str(endingPos);
-	
-	sleep(3);
 
         endingPos = Postition();
-	print "After 3 seconds = " + str(endingPos);
 	#Go to a neutral position;
 	moveServo(homePos);
 	
