@@ -54,16 +54,14 @@ def turnMotor(rotdir, distance, pos, prevPos):
 	if(rotdir == 'cw'):
 		#The lower duty cycle is more precise, but slow. So switch to the lower cycle when you are within a close distance of the taget
 		if(distance > 200 or pos == prevPos):
-			print "Trying high"
 			dutyCycle = .55
 		else:
 			dutyCycle = .51;
 	else:
 		if(distance > 200 or pos == prevPos):
-			print "Trying high"
-			dutyCycle = .43
-		else:
 			dutyCycle = .39
+		else:
+			dutyCycle = .43
 		
 	p = GPIO.PWM(Motor1A, 3.3333);
 	p.start(dutyCycle);
@@ -73,6 +71,9 @@ def turnMotor(rotdir, distance, pos, prevPos):
 def Postition():
 	msb = getBearing1();
 	lsb = getBearing2();
+	if(msb * 255 + lsb > 64000):
+		return msb * 255 + lsb - 65280
+
 	return (msb * 255 + lsb)
 	
 
