@@ -1,0 +1,96 @@
+How to operate:
+make sure camera is pointed at target
+For the love of god don't physically move the camera, move the gun itself
+type python send_img.py
+
+
+How to restart system:
+On Pi:
+
+Unplug power to Pi
+
+Open "sudo ifconfig eth0 192.168.1.2"
+
+type python receive_xy.py
+
+type python send_img.py
+
+On Shawns computer:
+
+password is TrueNorth
+
+open terminal
+
+sudo ifconfig eth0 192.168.1.3 (type password again)
+
+cd tn-emulator
+
+python server.py
+
+Possible errors and solutions:
+
+problem:
+It loops forever printing same pos
+
+solution:
+cntrl-c and start over
+
+problem:
+cannot take max() of zero sequence
+
+solution:
+
+if happening multiple times:
+(on shawn's laptop)
+vim server.py
+modify RED_LOWER so last array value is lower
+
+otherwise:
+take another photo
+
+problem: The camera doesn't take a picture, and says something in red like "Couldn't access device in dev/0" or something like that.
+Restart pi.
+2 terminals, go to cs402 directory on both
+
+type "sudo ifconfig eth0 192.168.1.2"
+
+type python receive_xy.py
+
+type python send_img.py
+
+On Shawns computer:
+
+password is tn-emulator
+
+open terminal
+
+sudo ifconfig eth0 192.168.1.3 (type password again)
+
+cd tn-emulator
+
+python server.py
+
+Possible errors and solutions:
+
+problem:
+It loops forever printing same pos
+
+solution:
+cntrl-c and start over
+
+problem:
+cannot take max() of zero sequence
+
+solution:
+
+if happening multiple times:
+(on shawn's laptop)
+vim server.py
+modify RED_LOWER so last array value is lower
+
+otherwise:
+take another photo
+
+problem: The camera doesn't take a picture, and says something in red like "Couldn't access device in dev/0" or something like that.
+Restart pi.
+

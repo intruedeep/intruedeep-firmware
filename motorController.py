@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import smbus
 import sys
 import motor_control
+import random;
 
 from time import sleep
 
@@ -57,7 +58,11 @@ def turnMotor(rotdir, distance, pos, prevPos):
 		if(distance > 200):
 			dutyCycle = .55
 		elif(pos == prevPos):
-			dutyCycle = .57;
+			seed = random.randint(0, 2);
+			if(seed % 2 == 0):
+				dutyCycle = .57;
+			else:
+				dutyCycle = .59;
 		else:
 			dutyCycle = .51;
 	else:
@@ -65,6 +70,14 @@ def turnMotor(rotdir, distance, pos, prevPos):
 			dutyCycle = .39
 		elif(pos == prevPos):
 			dutyCycle = .37;
+			seed = random.randint(0, 2);
+			if(seed % 2 == 0):
+				dutyCycle = .37;
+			else:
+				dutyCycle = .35;
+
+
+
 		else:
 			dutyCycle = .43
 		
@@ -168,7 +181,7 @@ def main(x, y):
         currentPos = Postition();
 	print "Reached destination = " + str(currentPos);
 
-	moveServo(y + yOffset);
+	moveServo(int(y) + yOffset);
 	
 	motor_control.fire()
 	sleep(1);

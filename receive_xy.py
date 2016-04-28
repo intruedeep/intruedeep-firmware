@@ -1,5 +1,6 @@
 import socket
 from motorController import main
+from portalsfx import activeS
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversocket.bind(('192.168.1.2', 9999))
@@ -9,6 +10,7 @@ while True:
         connection, address = serversocket.accept()
         buf = connection.recv(4096)
         if len(buf) > 0:
+		activeS.active_s('portalsfx/wavs/Turret_turret_active_2.wav')
 		xy = buf.split(',')
 		x = int(xy[0])
 		y = int(xy[1])

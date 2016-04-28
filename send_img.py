@@ -9,7 +9,7 @@ import time
 GPIO.setmode(GPIO.BOARD)
 
 def takeImage():
-	command = "fswebcam -r 1280x720 --no-banner --jpeg 100 -D 1 -S 13 image.jpg"
+	command = "fswebcam -r 1280x720 --no-banner --jpeg 100 -D 3 -S 13 image.jpg"
 	call(command.split(), shell=False)
 
 def main():

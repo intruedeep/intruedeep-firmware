@@ -2,21 +2,22 @@ import pyaudio
 import wave
 import sys
 
-wf = wave.open('wavs/Turret_turret_active_2.wav', 'rb')
-p = pyaudio.PyAudio()
+def active_s(filename):
+	wf = wave.open(filename, 'rb')
+	p = pyaudio.PyAudio()
 
-stream = p.open(format = p.get_format_from_width(wf.getsampwidth()), \
-                channels = wf.getnchannels(), \
-                rate = wf.getframerate(), \
-                output = True)
+	stream = p.open(format = p.get_format_from_width(wf.getsampwidth()), \
+			channels = wf.getnchannels(), \
+			rate = wf.getframerate(), \
+			output = True)
 
-data = wf.readframes(1024)
+	data = wf.readframes(1024)
 
-while (data != ''):
-    stream.write(data)
-    data = wf.readframes(1024)
+	while (data != ''):
+	    stream.write(data)
+	    data = wf.readframes(1024)
 
-stream.stop_stream()
-stream.close()
+	stream.stop_stream()
+	stream.close()
 
-p.terminate()
+	p.terminate()
